@@ -12,13 +12,22 @@ function onComplete(cb) {
   });
 }
 
-function encodeWAV(channelBufferArray, sampleRate, cb) {
+function encodeWAV(input, sampleRate, cb) {
+  var inputType = Object.prototype.toString.call( input );
+  var leftBuffer;
+  var rightBuffer;
+  if(inputType === '[object AudioBuffer]'){
+    leftBuffer = input.getChannelData(0);
+    rightBuffer = input.numberOfChannels > 1 ? input.getChannelData(1) : undefined;
+  }else if (inputType === '[object Array]'){
+    leftBuffer = channelBufferArray[0];
+    rightBuffer = channelBufferArray[1];
+  }
   w.postMessage({
-    leftBuf: channelBufferArray[0],
-    rightBuf: channelBufferArray[1],
+    leftBuf: leftBuffer,
+    rightBuf: rightBuffer,
     sampleRate: sampleRate
   });
-
   onComplete(cb);
 }
 
