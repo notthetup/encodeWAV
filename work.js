@@ -1,6 +1,5 @@
 module.exports = function(self) {
   self.addEventListener('message', function(ev) {
-    console.log('worker', ev);
     var blob = exportWAV(ev.data.leftBuf, ev.data.rightBuf, ev.data.sampleRate);
     self.postMessage(blob);
   }.bind(self));
@@ -9,7 +8,7 @@ module.exports = function(self) {
 function exportWAV(leftBuffer, rightBuffer, sampleRate) {
   var numChannel;
   var interleaved;
-  if (typeof rightBuf !== 'undefined'){
+  if (typeof rightBuffer !== 'undefined'){
     numChannel = 2;
     interleaved = interleave(leftBuffer, rightBuffer)
   }else{
